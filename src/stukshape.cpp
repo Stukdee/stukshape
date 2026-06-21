@@ -1,5 +1,7 @@
 #include "SDL2/SDL.h"
 #include <vector>
+#include <cstdio>
+#include <cstring>
 #include "stukshape.h"
 namespace stukshape{
 int show_window(void){
