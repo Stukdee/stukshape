@@ -1,7 +1,8 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.28)
 project(stukshape VERSION 1.0 LANGUAGES C CXX)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # 注释掉从系统查找SDL2的指令
@@ -18,6 +19,14 @@ include_directories(BEFORE ${CMAKE_BINARY_DIR}/src/external/SDL2/include)
 include_directories(src)
 include_directories(src/external/SDL2/include)
 
+# 可执行文件包含 main.cpp 和模块实现单元
 add_executable(stukshape main.cpp src/stukshape.cpp)
+
+target_sources(stukshape
+	PUBLIC
+	FILE_SET CXX_MODULES
+	FILES
+		src/stukshape.cppm
+)
 
 target_link_libraries(stukshape SDL2main SDL2)
