@@ -1,1 +1,1 @@
-cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
+cmake -DCMAKE_CXX_COMPILER=/usr/local/bin/g++-16 -GNinja -S ..

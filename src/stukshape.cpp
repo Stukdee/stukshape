@@ -1,70 +1,194 @@
+module;
+
 #include "SDL2/SDL.h"
 #include <vector>
 #include <cstdio>
 #include <cstring>
-#include "stukshape.h"
-namespace stukshape{
-int show_window(void){
-	if(SDL_Init(SDL_INIT_VIDEO) < 0){
-		fprintf(stderr, "SDL初始化失败: %s\n",SDL_GetError());
+#include <string>
+
+module stukshape;
+
+namespace stukshape {
+
+
+
+/*the function for stukshape object*/
+
+
+
+Stukshape::Stukshape () {
+	(this -> videoDriver) = NULL;
+	(this -> driversCount) = 0;
+}
+
+Stukshape::~Stukshape () {
+	SDL_Quit();
+	fprintf(stdout,"Can't wait to meet you next time in stukshape!!!\n");
+}
+
+int Stukshape::init () {
+	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+		fprintf(stderr, "failed to init SDL2: %s\n",SDL_GetError());
 		return -1;
 	}
-	printf("SDL2 初始化成功！\n");
-	SDL_version compiled;
-	SDL_version linked;
-	SDL_VERSION(&compiled);
-	SDL_GetVersion(&linked);
-	printf("\n编译时的SDL2版本: %d.%d.%d\n",
-		compiled.major,
-		compiled.minor,
-		compiled.patch
+	fprintf(stdout,"SDL2 initialization successful\n");
+
+	/*get information about compiled and linked of SDL2*/
+	SDL_VERSION(&(this -> compiled));
+	SDL_GetVersion(&(this -> linked));
+
+	(this -> videoDriver) = SDL_GetCurrentVideoDriver();
+	(this -> driversCount) = SDL_GetNumVideoDrivers();
+
+	return 0;
+}
+
+void Stukshape::showCompiledInformation () {
+	fprintf(stdout,"the version of SDL2 when be compiled: %d.%d.%d\n",
+		(this -> compiled).major,
+		(this -> compiled).minor,
+		(this -> compiled).patch
 	);
-	printf("链接时的SDL2版本: %d.%d.%d\n",
-		linked.major,
-		linked.minor,
-		linked.patch
+}
+
+void Stukshape::showLinkedInformation () {
+	fprintf(stdout,"the version of SDL2 when be linked: %d.%d.%d\n",
+		(this -> linked).major,
+		(this -> linked).minor,
+		(this -> linked).patch
 	);
-	/* 获取当前视频驱动信息*/
-	const char *video_driver = SDL_GetCurrentVideoDriver();
-	printf("当前视频驱动: %s\n",video_driver ? video_driver : "未知");
-	/* 获取可用的视频驱动*/
-	int num_drivers = SDL_GetNumVideoDrivers();
-	printf("可用的视频驱动数量: %d\n",num_drivers);
-	for(int i = 0;i < num_drivers;i++) {
-		printf("  - %s\n",SDL_GetVideoDriver(i));
+}
+
+void Stukshape::showVideoDriverInformation () {
+	fprintf(stdout,"the video driver: %s\n",(this -> videoDriver));
+}
+
+void Stukshape::showDriverCountInformation () {
+	fprintf(stdout,"the count of video driver: %d\n",(this -> driversCount));
+}
+
+void Stukshape::showVideoDriverNumber (){
+	for(int i = 0;i < (this -> driversCount);i++) {
+		fprintf(stdout,"%d    - %s\n",i,SDL_GetVideoDriver(i));
 	}
-	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY,"0");
-	/* 创建窗口*/
-	SDL_Window *window = NULL;
-	window = SDL_CreateWindow(
-		"SDL2 测试窗口",
+}
+
+void Stukshape::showAllInformation () {
+	showCompiledInformation();
+	showLinkedInformation();
+	showVideoDriverInformation();
+	showDriverCountInformation();
+	showVideoDriverNumber();
+}
+
+
+
+/*the function for window object*/
+
+
+
+Window::Window () {
+	(this -> width) = 100;
+	(this -> height) = 100;
+	(this -> title) = "hello_stukshape";
+	(this -> window) = NULL;
+	(this -> renderer) = NULL;
+}
+
+Window::Window (int width_,int height_,std::string title_) {
+	(this -> width) = width_;
+	(this -> height) = height_;
+	(this -> title) = title_;
+	(this -> window) = NULL;
+	(this -> renderer) = NULL;
+}
+
+Window::~Window () {
+	SDL_DestroyRenderer(renderer);
+	SDL_DestroyWindow(window);
+}
+
+int Window::creatWindow () {
+	(this -> window) = SDL_CreateWindow(
+		(this -> title).c_str(),
 		SDL_WINDOWPOS_UNDEFINED,
 		SDL_WINDOWPOS_UNDEFINED,
-		800,
-		800,
+		(this -> width),
+		(this -> height),
 		SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE
 	);
 	if(window == NULL) {
-		fprintf(stderr,"窗口创建失败: %s\n",SDL_GetError());
-		SDL_Quit();
+		fprintf(stdout,"failed to creat [%s] window: %s\n",(this -> title),SDL_GetError());
 		return 1;
 	}
-	printf("\n窗口创建成功！\n");
-	printf("窗口大小: %dx%d\n",800,800);
-	/* 获取窗口信息*/
-	SDL_DisplayMode display_mode;
-	if(SDL_GetWindowDisplayMode(window,&display_mode) == 0){
-		printf("显示模式: %dx%d @ %dHz\n",
-			display_mode.w,
-			display_mode.h,
-			display_mode.refresh_rate
+	return 0;
+}
+
+int Window::getDisplayModeInformation () {
+	return SDL_GetWindowDisplayMode((this -> window),&(this -> displayMode));
+}
+
+void Window::showDisplayModeInformation () {
+	if (getDisplayModeInformation() == 0){
+		fprintf(stdout,"display mode: %dx%d @ %dHz\n",
+			displayMode.w,
+			displayMode.h,
+			displayMode.refresh_rate
 		);
 	}
-	/* 获取渲染器信息*/
-	std::vector <int> preferred_renderer;
-	std::vector <int> all_renderer;
-	int num_renderers = SDL_GetNumRenderDrivers();
-	printf("\n可用的渲染驱动数量: %d\n",num_renderers);
+	else{
+		fprintf(stdout,"failed to get display mode\n");
+	}
+}
+
+int Window::getRendererCount () {
+	return SDL_GetNumRenderDrivers();
+}
+
+void Window::showRendererCount (){
+	fprintf(stdout,"the count of useable renderer: %d\n",getRendererCount());
+}
+
+void Window::show () {
+	if (creatWindow() != 0) {
+		return;
+	}
+	for(int i = 0; i < getRendererCount();i++){
+		SDL_RendererInfo info;
+		if(SDL_GetRenderDriverInfo(i,&info) == 0){
+			printf("  - %s\n",info.name);
+			allRenderer.push_back(i);
+		}
+	}
+	if(allRenderer.size() >= 0){
+		for(auto it = allRenderer.begin();it != allRenderer.end();it++){
+			renderer = SDL_CreateRenderer(
+				window,
+				*it,
+				SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC
+			);
+			if(renderer != NULL){
+				printf("成功创建渲染器。\n");
+				break;
+			}
+			printf("%d创建失败。\n",*it);
+		}
+	}
+}
+
+bool Window::shouldBeClose () {
+	SDL_Event e;
+	if (SDL_PollEvent(&e) != 0) {
+		if( e.type == SDL_QUIT) {
+			return 1;
+		}
+	}
+	return 0;
+}
+
+/*
+int show_window(void){
+	获取渲染器信息
 	for(int i = 0; i < num_renderers;i++){
 		SDL_RendererInfo info;
 		if(SDL_GetRenderDriverInfo(i,&info) == 0){
@@ -76,11 +200,11 @@ int show_window(void){
 			}
 		}
 	}
-	/* 创建渲染器*/
+	创建渲染器
 	SDL_Renderer *renderer = NULL;
 	if(preferred_renderer.size() >= 0){
 		for(auto it = preferred_renderer.begin();it != preferred_renderer.end();it++){
-			/* 使用OpenGL驱动*/
+			使用OpenGL驱动
 			renderer = SDL_CreateRenderer(
 				window,
 				*it,
@@ -97,7 +221,7 @@ int show_window(void){
 		printf("OpenGL渲染器创建失败，使用之后的渲染驱动。\n");
 		if(all_renderer.size() >= 0){
 			for(auto it = all_renderer.begin();it != all_renderer.end();it++){
-				/* 使用接下来的驱动*/
+				使用接下来的驱动
 				renderer = SDL_CreateRenderer(
 					window,
 					*it,
@@ -118,7 +242,7 @@ int show_window(void){
 		return 1;
 	}
 	printf("\n渲染器创建成功！\n");
-	/*获取渲染器信息*/
+	获取渲染器信息
 	SDL_RendererInfo renderer_info;
 	if(SDL_GetRendererInfo(renderer,&renderer_info) == 0){
 		printf("当前渲染器: %s\n",renderer_info.name);
@@ -139,5 +263,6 @@ int show_window(void){
 	SDL_Quit();
 	printf("\n程序正常退出。\n");
 	return 0;
-}
+}*/
+
 }
