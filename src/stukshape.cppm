@@ -28,56 +28,56 @@ class Stukshape {
 
 		/*
 		function : Stukshape ()
-		Introduction : just creat a class.
+		introduction : just creat a class.
 		*/
 		Stukshape ();
 
 		/*
 		function : ~Stukshape ()
-		Introduction : quit SDL2.
+		introduction : quit SDL2.
 		*/
 		~Stukshape ();
 
 		/*
 		function : init ()
-		Introduction : to init this object and SDL2.
+		introduction : to init this object and SDL2.
 		out : the status of the function, when the value smaller than 0, it is failed to init.
 		*/
 		int init ();
 
 		/*
 		function : showCompiledInformation ()
-		Introduction : print the version of SDL2 when it is compiled.
+		introduction : print the version of SDL2 when it is compiled.
 		*/
 		void showCompiledInformation ();
 
 		/*
 		function : showLinkedInformation ()
-		Introduction : print the version of SDL2 when it is linked.
+		introduction : print the version of SDL2 when it is linked.
 		*/
 		void showLinkedInformation ();
 
 		/*
 		function : showVideoDriverInformation ()
-		Introduction : print the information of video driver which is being used now.
+		introduction : print the information of video driver which is being used now.
 		*/
 		void showVideoDriverInformation ();
 
 		/*
 		function : showDriverCountInformation ();
-		Introduction : print the count of all the video drivers which can be found.
+		introduction : print the count of all the video drivers which can be found.
 		*/
 		void showDriverCountInformation ();
 
 		/*
 		function : showVideoDriverNumber ();
-		Introduction : print the number of video driver.
+		introduction : print the number of video driver.
 		*/
 		void showVideoDriverNumber ();
 
 		/*
 		function : showAllInformation ();
-		Introduction : print all the information about this object.
+		introduction : print all the information about this object.
 		*/
 		void showAllInformation ();
 };
@@ -95,6 +95,12 @@ class Window{
 		/*the title of the window*/
 		std::string title;
 
+		/*the position x on the screen*/
+		int posX;
+
+		/*the position y on the screen*/
+		int posY;
+
 		/*the window*/
 		SDL_Window *window;
 
@@ -110,6 +116,9 @@ class Window{
 		/*just count of renderer*/
 		int rendererCount;
 
+		/*as its name*/
+		bool resizeable;
+
 		/*to creat window,it is must not be provided to user*/
 		int creatWindow ();
 
@@ -120,13 +129,13 @@ class Window{
 
 		/*
 		function : Window ()
-		Introduction : default function without input when the window is created.
+		introduction : default function without input when the window is created.
 		*/
 		Window ();
 
 		/*
 		function : Window (int width_,int height_,std::string title_)
-		Introduction : user shoude provide 3 values to set the window.
+		introduction : user shoude provide 3 values to set the window.
 		in : 
 			width_ -> provide window with its width
 			height_ -> provide window with its height
@@ -135,36 +144,74 @@ class Window{
 		Window (int width_,int height_,std::string title_);
 
 		/*
+		function : Window (int width_,int height_,std::string title_,int posX_,int posY_)
+		introduction : user shoude provide 5 values to set the window.
+		in : 
+			width_ -> provide window with its width
+			height_ -> provide window with its height
+			title_ -> provide window with its title
+			posX_ -> provide window with its position x on the screen
+			posY_ -> provide window with its position y on the screen
+		*/
+		Window (int width_,int height_,std::string title_,int posX_,int posY_);
+
+		/*
 		function : ~Window ()
-		Introduction : to destroy the renderer and window.
+		introduction : to destroy the renderer and window.
 		*/
 		~Window ();
 
 		/*
 		function : showDisplayModeInformation ()
-		Introduction : show the display mode information.
+		introduction : show the display mode information.
 			it should be used after using the function show().
 		*/
 		void showDisplayModeInformation ();
 
 		/*
 		function : getRendererCount ()
-		Introduction : it will get the count of the renderer.
+		introduction : it will get the count of the renderer.
 		out : an integer about the count of renderer.
 		*/
 		int getRendererCount ();
 
 		/*
 		function : showRendererCount ()
-		Introduction : it will show the count of the renderer.
+		introduction : it will show the count of the renderer.
 		*/
 		void showRendererCount ();
 
 		/*
-		function : void show ()
-		Introduction : show the window if it is ready.
+		function : int setRenderer (std::string rendererName)
+		introduction : provide it with a name of the renderer, it can find and switch itself.
+		in : 
+			rendererName -> a string witch is the name of the renderer
+		out : a status about this function
 		*/
-		void show ();
+		std::string setRenderer (std::string rendererName);
+
+		/*
+		function : void show ()
+		introduction : show the window if it is ready.
+		out : a status about this function
+		*/
+		std::string show ();
+
+		/*
+		function : void setResizeable (bool a)
+		introduction : set the window s resizeable.
+		in :
+			a -> a bool value, true for it can resize,
+				false for it cant
+		*/
+		void setResizeable (bool a);
+
+		/*
+		function : bool isResizeable ()
+		introduction : return a bool value to tell user the resizeable.
+		out : a bool value, true for it can resize, false for it cant resize
+		*/
+		bool isResizeable ();
 
 		/*
 		function : shouldBeClose ()
@@ -173,6 +220,7 @@ class Window{
 		out : an bool value, true for it should, false for it shouldn't
 		*/
 		bool shouldBeClose ();
+
 		/*
 		void setWidth();
 		void setHeight();

@@ -90,37 +90,60 @@ void Stukshape::showAllInformation () {
 Window::Window () {
 	(this -> width) = 100;
 	(this -> height) = 100;
+	(this -> posX) = 10;
+	(this -> posY) = 10;
 	(this -> title) = "hello_stukshape";
+	(this -> posX) = 10;
+	(this -> posY) = 10;
+	(this -> resizeable) = 0;
 	(this -> window) = NULL;
 	(this -> renderer) = NULL;
+	creatWindow();
 }
 
 Window::Window (int width_,int height_,std::string title_) {
 	(this -> width) = width_;
 	(this -> height) = height_;
 	(this -> title) = title_;
+	(this -> posX) = 10;
+	(this -> posY) = 10;
+	(this -> resizeable) = 0;
 	(this -> window) = NULL;
 	(this -> renderer) = NULL;
+	creatWindow();
+}
+
+Window::Window (int width_,int height_,std::string title_,int posX_,int posY_){
+	(this -> width) = width_;
+	(this -> height) = height_;
+	(this -> title) = title_;
+	(this -> posX) = posX_;
+	(this -> posY) = posY_;
+	(this -> resizeable) = 0;
+	(this -> window) = NULL;
+	(this -> renderer) = NULL;
+	creatWindow();
 }
 
 Window::~Window () {
-	SDL_DestroyRenderer(renderer);
-	SDL_DestroyWindow(window);
+	SDL_DestroyRenderer((this -> renderer));
+	SDL_DestroyWindow((this -> window));
 }
 
 int Window::creatWindow () {
 	(this -> window) = SDL_CreateWindow(
 		(this -> title).c_str(),
-		SDL_WINDOWPOS_UNDEFINED,
-		SDL_WINDOWPOS_UNDEFINED,
+		(this -> posX),
+		(this -> posY),
 		(this -> width),
 		(this -> height),
 		SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE
 	);
-	if(window == NULL) {
-		fprintf(stdout,"failed to creat [%s] window: %s\n",(this -> title),SDL_GetError());
+	if ((this -> window) == NULL) {
+		fprintf(stdout,"failed to creat [%s] window: %s\n",(this -> title).c_str(),SDL_GetError());
 		return 1;
 	}
+	SDL_HideWindow((this -> window));
 	return 0;
 }
 
@@ -131,9 +154,9 @@ int Window::getDisplayModeInformation () {
 void Window::showDisplayModeInformation () {
 	if (getDisplayModeInformation() == 0){
 		fprintf(stdout,"display mode: %dx%d @ %dHz\n",
-			displayMode.w,
-			displayMode.h,
-			displayMode.refresh_rate
+			(this -> displayMode).w,
+			(this -> displayMode).h,
+			(this -> displayMode).refresh_rate
 		);
 	}
 	else{
@@ -145,41 +168,72 @@ int Window::getRendererCount () {
 	return SDL_GetNumRenderDrivers();
 }
 
-void Window::showRendererCount (){
+void Window::showRendererCount () {
 	fprintf(stdout,"the count of useable renderer: %d\n",getRendererCount());
 }
 
-void Window::show () {
-	if (creatWindow() != 0) {
-		return;
-	}
-	for(int i = 0; i < getRendererCount();i++){
+std::string Window::setRenderer (std::string rendererName) {
+	std::vector <int> preferredRenderer;
+	for (int i = 0; i < getRendererCount();i++){
 		SDL_RendererInfo info;
-		if(SDL_GetRenderDriverInfo(i,&info) == 0){
-			printf("  - %s\n",info.name);
-			allRenderer.push_back(i);
-		}
-	}
-	if(allRenderer.size() >= 0){
-		for(auto it = allRenderer.begin();it != allRenderer.end();it++){
-			renderer = SDL_CreateRenderer(
-				window,
-				*it,
-				SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC
-			);
-			if(renderer != NULL){
-				printf("成功创建渲染器。\n");
-				break;
+		if (SDL_GetRenderDriverInfo(i,&info) == 0) { 
+			if (strstr(info.name,rendererName.c_str()) != NULL) {
+				preferredRenderer.push_back(i);
 			}
-			printf("%d创建失败。\n",*it);
 		}
 	}
+	for (auto it = preferredRenderer.begin();it != preferredRenderer.end();it++) {
+		(this -> renderer) = SDL_CreateRenderer(
+			(this -> window),
+			*it,
+			SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC
+		);
+		if ((this -> renderer) != NULL) {
+			return std::string("created " + rendererName + " successfully!!!");
+		}
+	}
+	return std::string("failed to created " + rendererName);
+}
+
+std::string Window::show () {
+	SDL_ShowWindow((this -> window));
+	if ((this -> renderer) == NULL){
+		for(int i = 0; i < getRendererCount();i++){
+			SDL_RendererInfo info;
+			if(SDL_GetRenderDriverInfo(i,&info) == 0){
+				allRenderer.push_back(i);
+			}
+		}
+		if(allRenderer.size() >= 0){
+			for(auto it = allRenderer.begin();it != allRenderer.end();it++){
+				renderer = SDL_CreateRenderer(
+					window,
+					*it,
+					SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC
+				);
+				if(renderer != NULL){
+					return "created renderer successfully!!!";
+				}
+			}
+			return "failed to created rendererT_T";
+		}
+	}
+	return "renderer have been already!!!";
+}
+
+void Window::setResizeable (bool a){
+	(this -> resizeable) = a;
+	SDL_SetWindowResizable((this -> window),a ? SDL_TRUE : SDL_FALSE);
+}
+
+bool Window::isResizeable () {
+	return (this -> resizeable);
 }
 
 bool Window::shouldBeClose () {
 	SDL_Event e;
 	if (SDL_PollEvent(&e) != 0) {
-		if( e.type == SDL_QUIT) {
+		if (e.type == SDL_QUIT) {
 			return 1;
 		}
 	}

@@ -1,1 +1,2 @@
-cmake -DCMAKE_CXX_COMPILER=/usr/local/bin/g++-16 -GNinja -S ..
+#cmake -DCMAKE_CXX_COMPILER=/usr/local/bin/g++-16 -DCMAKE_C_COMPILER=/usr/local/bin/gcc-16 -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -GNinja -S ..
+cmake -DCMAKE_CXX_COMPILER=/usr/local/opt/llvm/bin/clang++ -DCMAKE_C_COMPILER=/usr/local/opt/llvm/bin/clang -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -GNinja -S ..
