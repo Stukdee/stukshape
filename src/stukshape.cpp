@@ -240,6 +240,37 @@ bool Window::shouldBeClose () {
 	return 0;
 }
 
+std::string Window::setWidth (int a) {
+	if (a <= 0) {
+		return std::string("the number you provide is under or equal zero.");
+	}
+	(this -> width) = a;
+	SDL_SetWindowSize((this -> window),(this -> width),(this -> height));
+	return "change size successfully";
+}
+
+std::string Window::setHeight (int a) {
+	if (a <= 0) {
+		return std::string("the number you provide is under or equal zero.");
+	}
+	(this -> height) = a;
+	SDL_SetWindowSize((this -> window),(this -> width),(this -> height));
+	return "change size successfully";
+}
+
+std::string Window::setSize (int a,int b) {
+	if (a <= 0 or b <= 0) {
+		return std::string("the number you provide is under or equal zero.");
+	}
+	setWidth(a);
+	setHeight(b);
+	return "change size successfully";
+}
+
+void Window::setTitle(std::string a) {
+	SDL_SetWindowTitle((this -> window),a.c_str());
+}
+
 /*
 int show_window(void){
 	获取渲染器信息

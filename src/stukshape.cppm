@@ -15,12 +15,16 @@ export namespace stukshape {
 class Stukshape {
 
 	private:
+
 		/*the version of SDL2 when it is compiled*/
 		SDL_version compiled;
+
 		/*the version of SDL2 when it is linked*/
 		SDL_version linked;
+
 		/*the information of video driver which is being used now*/
 		const char *videoDriver;
+
 		/*the count of all the video drivers which can be found*/
 		int driversCount;
 
@@ -204,7 +208,7 @@ class Window{
 			a -> a bool value, true for it can resize,
 				false for it cant
 		*/
-		void setResizeable (bool a);
+		void setResizeable (bool a = 0);
 
 		/*
 		function : bool isResizeable ()
@@ -215,16 +219,47 @@ class Window{
 
 		/*
 		function : shouldBeClose ()
-		Introduction : it is used to check the window if it should be close.
+		introduction : it is used to check the window if it should be close.
 			i advise user using it with "while()".
 		out : an bool value, true for it should, false for it shouldn't
 		*/
 		bool shouldBeClose ();
 
 		/*
-		void setWidth();
-		void setHeight();
-		void setTitle();*/
+		function : void setWidth (int w)
+		introduction : it can change the window s width.
+		in : 
+			a -> window s width
+		out : the status about the function, if you input a number under 0, it donest work.
+		*/
+		std::string setWidth (int a = 100);
+
+		/*
+		function : void setHeight (int a)
+		introduction : it can change the window s height.
+		in : 
+			a -> window s height
+		out : the status about the function, if you input a number under 0, it donest work.
+		*/
+		std::string setHeight (int a = 100);
+
+		/*
+		function : void setSize (int a,int b)
+		introduction : it can change both width and height.
+		in : 
+			a -> width
+			b -> height
+		out : the status about the function, if you input a number under 0, it donest work.
+		*/
+		std::string setSize (int a = 100,int b = 100);
+
+		/*
+		function : void setTitle(std::string a)
+		introduction : it can change the window s title.
+		in : 
+			a -> the new title for the window
+		*/
+		void setTitle(std::string a = "hello");
 };
 
 int show_window(void);

@@ -6,6 +6,8 @@ import stukshape;
 
 float deltaTime = 0.0F;
 float jg = 0.0F;
+int w = 0;
+int h = 0;
 
 float getDeltaTime(){
 	static struct timespec lastTime = {0};
@@ -32,7 +34,12 @@ int main(void){
 		jg += deltaTime;
 		if (jg > 1){
 			jg = 0;
+			w += 50;
+			h += 50;
+			theWindow.setTitle("hellocpp20");
 			theWindow.setResizeable(1 - theWindow.isResizeable());
+			theWindow.setWidth(w);
+			theWindow.setHeight(h);
 		}
 	}
 	return 0;
