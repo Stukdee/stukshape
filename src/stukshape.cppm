@@ -50,40 +50,40 @@ class Stukshape {
 		int init ();
 
 		/*
-		function : showCompiledInformation ()
+		function : showCompiledInformation () const
 		introduction : print the version of SDL2 when it is compiled.
 		*/
-		void showCompiledInformation ();
+		void showCompiledInformation () const;
 
 		/*
-		function : showLinkedInformation ()
+		function : showLinkedInformation () const
 		introduction : print the version of SDL2 when it is linked.
 		*/
-		void showLinkedInformation ();
+		void showLinkedInformation () const;
 
 		/*
-		function : showVideoDriverInformation ()
+		function : showVideoDriverInformation () const
 		introduction : print the information of video driver which is being used now.
 		*/
-		void showVideoDriverInformation ();
+		void showVideoDriverInformation () const;
 
 		/*
-		function : showDriverCountInformation ();
+		function : showDriverCountInformation () const
 		introduction : print the count of all the video drivers which can be found.
 		*/
-		void showDriverCountInformation ();
+		void showDriverCountInformation () const;
 
 		/*
-		function : showVideoDriverNumber ();
+		function : showVideoDriverNumber () const
 		introduction : print the number of video driver.
 		*/
-		void showVideoDriverNumber ();
+		void showVideoDriverNumber () const;
 
 		/*
-		function : showAllInformation ();
+		function : showAllInformation () const
 		introduction : print all the information about this object.
 		*/
-		void showAllInformation ();
+		void showAllInformation () const;
 };
 
 class Window{

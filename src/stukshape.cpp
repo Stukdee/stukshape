@@ -43,7 +43,7 @@ int Stukshape::init () {
 	return 0;
 }
 
-void Stukshape::showCompiledInformation () {
+void Stukshape::showCompiledInformation () const {
 	fprintf(stdout,"the version of SDL2 when be compiled: %d.%d.%d\n",
 		(this -> compiled).major,
 		(this -> compiled).minor,
@@ -51,7 +51,7 @@ void Stukshape::showCompiledInformation () {
 	);
 }
 
-void Stukshape::showLinkedInformation () {
+void Stukshape::showLinkedInformation () const {
 	fprintf(stdout,"the version of SDL2 when be linked: %d.%d.%d\n",
 		(this -> linked).major,
 		(this -> linked).minor,
@@ -59,21 +59,21 @@ void Stukshape::showLinkedInformation () {
 	);
 }
 
-void Stukshape::showVideoDriverInformation () {
+void Stukshape::showVideoDriverInformation () const {
 	fprintf(stdout,"the video driver: %s\n",(this -> videoDriver));
 }
 
-void Stukshape::showDriverCountInformation () {
+void Stukshape::showDriverCountInformation () const {
 	fprintf(stdout,"the count of video driver: %d\n",(this -> driversCount));
 }
 
-void Stukshape::showVideoDriverNumber (){
+void Stukshape::showVideoDriverNumber () const {
 	for(int i = 0;i < (this -> driversCount);i++) {
 		fprintf(stdout,"%d    - %s\n",i,SDL_GetVideoDriver(i));
 	}
 }
 
-void Stukshape::showAllInformation () {
+void Stukshape::showAllInformation () const {
 	showCompiledInformation();
 	showLinkedInformation();
 	showVideoDriverInformation();
